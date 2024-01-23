@@ -78,19 +78,21 @@ while (runApp)
                     try
                     {
                         Console.Write("Enter user id: ");
-                        int userId = Convert.ToInt32(Console.ReadLine());
-                        while (!int.TryParse(Console.ReadLine(), out userId) || (userId < 0))
+                        int userId;
+                        if (!int.TryParse(Console.ReadLine(),out userId )|| (userId < 0))
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("\nWrong format id! Please try again...\n");
                             Console.ResetColor();
                         }
+                        else
+                        {
                             int result = await postServices.GetUserPostCountsAsync(userId);
-                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine($"User ID : {userId}\n" +
                                               $"User's post count : {result}\n" +
                                               " ");
-
+                        }
                     }
                     catch (Exception ex)
                     {
