@@ -17,8 +17,9 @@ while (runApp)
 {
     Console.ForegroundColor = ConsoleColor.DarkYellow;
     Console.WriteLine("1 == Add object to database\n" +
-                      "2 == Get missing posts in database\n" +
+                      "2 == Show objects not exist in database\n" +
                       "3 == Show user's posts count\n" +
+                      "4 == Show all objects in database\n" +
                       "0 == Close App\n" +
                       " ");
     Console.ResetColor();
@@ -31,7 +32,7 @@ while (runApp)
     bool IsInt = int.TryParse(option, out IntOption);
     if (IsInt)
     {
-        if (IntOption >= 0 && IntOption <= 3)
+        if (IntOption >= 0 && IntOption <= 4)
         {
             switch (IntOption)
             {
@@ -40,7 +41,7 @@ while (runApp)
                     {
                         Console.Write("Enter post's ID: ");
                         int postId = Convert.ToInt32(Console.ReadLine());
-                        Post post = await postServices.GetByIdAsync(postId);
+                        Post? post = await postServices.GetByIdAsync(postId);
                         if (post is not null)
                         {
                             await postServices.AddPostToDbAsync(post);
@@ -61,7 +62,7 @@ while (runApp)
                         goto case (int)Menu.Add;
                     }
                     break;
-                case (int)Menu.Show:
+                case (int)Menu.GetMiss:
                     try
                     {
                         await postServices.NotExistPostsDbAsync();
@@ -71,10 +72,10 @@ while (runApp)
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(ex.Message);
                         Console.ResetColor();
-                        goto case (int)Menu.Show;
+                        goto case (int)Menu.GetMiss;
                     }
                     break;
-                case (int)Menu.Get:
+                case (int)Menu.ShowCount:
                     try
                     {
                         Console.Write("Enter user id: ");
@@ -99,7 +100,20 @@ while (runApp)
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(ex.Message);
                         Console.ResetColor();
-                        goto case (int)Menu.Get;
+                        goto case (int)Menu.ShowCount;
+                    }
+                    break;
+                case (int)Menu.GetAll:
+                    try
+                    {
+                        await postServices.ShowAllPostsInDbAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine(ex.Message);
+                        Console.ResetColor();
+                        goto case (int)Menu.GetAll;
                     }
                     break;
                 case 0:

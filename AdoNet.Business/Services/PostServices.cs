@@ -7,7 +7,7 @@ namespace AdoNet.Business.Services;
 
 public class PostServices
 {
-    public async Task<Post> GetByIdAsync(int id)
+    public async Task<Post?> GetByIdAsync(int id)
     {
         if (id < 0) throw new WrongIdFormatException("Wrong ID format !!");
         HttpClient client = new();
@@ -85,24 +85,16 @@ public class PostServices
                 var notExistPostsDb = posts.Where(apiPost => !postsIdInDb.Contains(apiPost.Id)).ToList();
                 foreach (var post in notExistPostsDb)
                 {
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine($"User Id: {post.UserId}\n" +
                                       $"Post Id: {post.Id}\n" +
                                       $"Post Title: {post.Title}\n" +
-                                      $"Post Body: {post.Body}");
+                                      $"Post Body: {post.Body}\n" +
+                                      " ");
                     Console.ResetColor();
                 }
             }
         }
-
-
-
-
-
-
-
-
-
     }
     public async Task<int> GetUserPostCountsAsync(int userId)
     {
@@ -121,4 +113,33 @@ public class PostServices
         }
         return result;
     }
+
+    public async Task ShowAllPostsInDbAsync()
+    {
+        string connString = @"Server=DESKTOP-E26J09P\SQLEXPRESS;Database=AdoNetDB;Trusted_Connection=true";
+
+        using (SqlConnection conn = new(connString))
+        {
+            conn.Open();
+            string query = "SELECT * FROM Posts";
+
+            using (SqlCommand cmd = new(query, conn))
+            {
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (reader.Read())
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkCyan;
+                        Console.WriteLine($"User Id: {reader["UserId"]}\n" +
+                                          $"Post Id: {reader["id"]}\n" +
+                                          $"Post Title: {reader["title"]}\n" +
+                                          $"Post Body: {reader["body"]}\n" +
+                                          " ");
+                        Console.ResetColor();
+                    }
+                }
+            }
+        }
+    }
+
 }

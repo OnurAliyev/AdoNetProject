@@ -2,6 +2,7 @@
 public enum Menu 
 {
     Add=1,
-    Show,
-    Get
+    GetMiss,
+    ShowCount,
+    GetAll
 }
