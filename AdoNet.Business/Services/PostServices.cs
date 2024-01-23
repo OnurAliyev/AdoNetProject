@@ -22,7 +22,7 @@ public class PostServices
         else
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Operation failed : {httpResponse.StatusCode} due to {httpResponse.ReasonPhrase}");
+            Console.WriteLine($"Operation failed : {httpResponse.StatusCode}");
             Console.ResetColor();
             return null;
         }

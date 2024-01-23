@@ -19,7 +19,7 @@ while (runApp)
     Console.WriteLine("1 == Add object to database\n" +
                       "2 == Get missing posts in database\n" +
                       "3 == Show user's posts count\n" +
-                      "0 == Close App\n"+
+                      "0 == Close App\n" +
                       " ");
     Console.ResetColor();
     Console.ForegroundColor = ConsoleColor.Cyan;
@@ -31,34 +31,34 @@ while (runApp)
     bool IsInt = int.TryParse(option, out IntOption);
     if (IsInt)
     {
-        if(IntOption>=0&& IntOption <= 3)
+        if (IntOption >= 0 && IntOption <= 3)
         {
-            switch (IntOption) 
+            switch (IntOption)
             {
                 case (int)Menu.Add:
                     try
                     {
                         Console.Write("Enter post's ID: ");
-                        int postId=Convert.ToInt32(Console.ReadLine());
-                        Post post= await postServices.GetByIdAsync(postId);
-                        if(post is not null)
+                        int postId = Convert.ToInt32(Console.ReadLine());
+                        Post post = await postServices.GetByIdAsync(postId);
+                        if (post is not null)
                         {
                             await postServices.AddPostToDbAsync(post);
                         }
                         else
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine($"Post with this {postId} is not found");
-                            Console.ResetColor ();
-                            goto case(int)Menu.Add;
+                            Console.WriteLine($"Post with this ID {postId} is not found");
+                            Console.ResetColor();
+                            goto case (int)Menu.Add;
                         }
                     }
-                    catch(Exception ex) 
+                    catch (Exception ex)
                     {
-                        Console.ForegroundColor= ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(ex.Message);
                         Console.ResetColor();
-                        goto case(int)Menu.Add;
+                        goto case (int)Menu.Add;
                     }
                     break;
                 case (int)Menu.Show:
@@ -79,20 +79,17 @@ while (runApp)
                     {
                         Console.Write("Enter user id: ");
                         int userId = Convert.ToInt32(Console.ReadLine());
-                        if(!int.TryParse(Console.ReadLine(), out userId)|| (userId<0))
+                        while (!int.TryParse(Console.ReadLine(), out userId) || (userId < 0))
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("\nWrong format id! Please try again...\n");
                             Console.ResetColor();
                         }
-                        else
-                        {
                             int result = await postServices.GetUserPostCountsAsync(userId);
                             Console.ForegroundColor = ConsoleColor.DarkYellow;
                             Console.WriteLine($"User ID : {userId}\n" +
-                                              $"User's post count : {result}\n"+
+                                              $"User's post count : {result}\n" +
                                               " ");
-                        }
 
                     }
                     catch (Exception ex)

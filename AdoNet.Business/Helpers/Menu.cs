@@ -2,6 +2,6 @@
 public enum Menu 
 {
     Add=1,
-    Get,
-    Show
+    Show,
+    Get
 }
